@@ -1,5 +1,8 @@
 import HomePage from "@/components/HomePage";
+import { getProjectIdsWithDetailImages } from "@/lib/projectDetails.server";
 
 export default function Home() {
-  return <HomePage />;
+  const detailProjectIds = getProjectIdsWithDetailImages();
+
+  return <HomePage detailProjectIds={detailProjectIds} />;
 }

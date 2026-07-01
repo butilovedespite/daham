@@ -1,11 +1,15 @@
 import ProjectCard from "@/components/ProjectCard";
 import { chunkProjects } from "@/lib/chunkProjects";
 import { getRowTemplateColumns } from "@/lib/portfolioColumns";
-import type { Project } from "@/lib/projects";type PortfolioGridProps = {
+import type { Project } from "@/lib/projects";
+
+type PortfolioGridProps = {
   projects: Project[];
   columns?: number;
   /** ALL view: assign columns 1→2→3 in chunk order (avoids gridColumn collisions). */
   sequentialLayout?: boolean;
+  detailProjectIds?: ReadonlySet<string>;
+  onProjectClick?: (project: Project) => void;
 };
 
 function sortByGridColumn(row: Project[]): Project[] {
@@ -20,6 +24,8 @@ export default function PortfolioGrid({
   projects,
   columns = 3,
   sequentialLayout = false,
+  detailProjectIds,
+  onProjectClick,
 }: PortfolioGridProps) {
   if (projects.length === 0) {
     return null;
@@ -43,7 +49,12 @@ export default function PortfolioGrid({
             style={{ gridTemplateColumns: getRowTemplateColumns() }}
           >
             {layoutRow.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                hasDetail={detailProjectIds?.has(project.id) ?? false}
+                onClick={onProjectClick}
+              />
             ))}
           </div>
         );

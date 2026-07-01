@@ -10,6 +10,8 @@ type HeaderProps = {
   onCategoryChange: (category: Category | "ALL") => void;
   activeNav: "WORKS" | "ABOUT";
   onNavChange: (nav: "WORKS" | "ABOUT") => void;
+  detailMode?: boolean;
+  onLogoClick?: () => void;
 };
 
 export default function Header({
@@ -17,26 +19,37 @@ export default function Header({
   onCategoryChange,
   activeNav,
   onNavChange,
+  detailMode = false,
+  onLogoClick,
 }: HeaderProps) {
   return (
     <>
       <div className="pointer-events-none fixed inset-x-0 top-10 z-40">
         <div className="page-container">
-          <SiteLogo />
+          <button
+            type="button"
+            className="site-logo-button pointer-events-auto cursor-pointer border-0 bg-transparent p-0"
+            onClick={onLogoClick}
+            aria-label="첫 화면으로"
+          >
+            <SiteLogo />
+          </button>
         </div>
       </div>
 
-      <header className="page-container relative z-50 pb-12 pt-10">
-        <div className="flex items-start justify-end">
-          <div className="header-nav-group">
-            <CategoryDropdown
-              activeCategory={activeCategory}
-              onCategoryChange={onCategoryChange}
-            />
-            <NavButtons activeNav={activeNav} onNavChange={onNavChange} />
+      {!detailMode ? (
+        <header className="page-container relative z-50 pb-12 pt-10">
+          <div className="flex items-start justify-end">
+            <div className="header-nav-group">
+              <CategoryDropdown
+                activeCategory={activeCategory}
+                onCategoryChange={onCategoryChange}
+              />
+              <NavButtons activeNav={activeNav} onNavChange={onNavChange} />
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      ) : null}
     </>
   );
 }

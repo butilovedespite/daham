@@ -33,8 +33,9 @@ export type Project = {
   year?: string;
   gridColumn?: number;
   imageScale?: number;
-  /** Largest column share in ALL view rows (overrides imageScale when sequential). */
+  /** ALL view rows (overrides imageScale when sequential). */
   allViewImageScale?: number;
+  detailImageLabels?: string[];
 };
 
 export function sortProjectsByYearDesc(projects: Project[]): Project[] {
@@ -219,6 +220,7 @@ const PUBLIC_PROJECTS = sortProjectsByYearDesc([
     image: "/공공/갈곳동 어린이집.jpg",
     year: "2013",
     gridColumn: 1,
+    detailImageLabels: ["1. 변경 전", "2. 변경 후"],
   },
   {
     id: "public-2",
