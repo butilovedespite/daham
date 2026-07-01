@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 import { useEffect, useState } from "react";
 import { getMaterialColor } from "@/lib/materialPalette";
 import { IMAGE_QUALITY, IMAGE_SIZES } from "@/lib/imageDefaults";
@@ -73,7 +73,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
             <div className="project-detail__rule" aria-hidden="true" />
           </div>
 
-          <Image
+          <FadeInImage
             src={project.image}
             alt={project.title}
             width={960}
@@ -99,7 +99,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                   {project.detailImageLabels?.[index] ?? index + 1}
                 </span>
                 <div className="project-detail__gallery-image-wrap">
-                  <Image
+                  <FadeInImage
                     src={image}
                     alt={`${project.title} 상세 ${index + 1}`}
                     width={1040}

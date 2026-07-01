@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import FadeInImage from "@/components/FadeInImage";
 import { getMaterialColor } from "@/lib/materialPalette";
 import { IMAGE_QUALITY, IMAGE_SIZES } from "@/lib/imageDefaults";
 import { CATEGORY_LABELS, type Project } from "@/lib/projects";
@@ -34,7 +33,7 @@ export default function ProjectCard({
 
   const media = (
 
-    <Image
+    <FadeInImage
       src={project.image}
       alt={project.title}
       width={888}
