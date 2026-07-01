@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { getMaterialColor } from "@/lib/materialPalette";
-
+import { IMAGE_QUALITY, IMAGE_SIZES } from "@/lib/imageDefaults";
 import { CATEGORY_LABELS, type Project } from "@/lib/projects";
 
 
@@ -35,19 +35,13 @@ export default function ProjectCard({
   const media = (
 
     <Image
-
       src={project.image}
-
       alt={project.title}
-
-      width={1200}
-
-      height={1500}
-
+      width={888}
+      height={1110}
+      quality={IMAGE_QUALITY.grid}
       className="project-card__image"
-
-      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-
+      sizes={IMAGE_SIZES.grid}
     />
 
   );

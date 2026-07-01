@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getMaterialColor } from "@/lib/materialPalette";
+import { IMAGE_QUALITY, IMAGE_SIZES } from "@/lib/imageDefaults";
 import { CATEGORY_LABELS, type Project } from "@/lib/projects";
 
 type ProjectDetailViewProps = {
@@ -11,24 +12,33 @@ type ProjectDetailViewProps = {
 
 export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
   const [detailImages, setDetailImages] = useState<string[]>([]);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const { accent } = getMaterialColor(project.category);
 
   useEffect(() => {
     let cancelled = false;
+    setImagesLoaded(false);
+    setDetailImages([]);
 
     async function loadDetailImages() {
-      const response = await fetch(
-        `/api/project-details?image=${encodeURIComponent(project.image)}`,
-      );
+      try {
+        const response = await fetch(
+          `/api/project-details?image=${encodeURIComponent(project.image)}`,
+        );
 
-      if (!response.ok) {
-        return;
-      }
+        if (!response.ok) {
+          return;
+        }
 
-      const data = (await response.json()) as { images: string[] };
+        const data = (await response.json()) as { images: string[] };
 
-      if (!cancelled) {
-        setDetailImages(data.images);
+        if (!cancelled) {
+          setDetailImages(data.images);
+        }
+      } finally {
+        if (!cancelled) {
+          setImagesLoaded(true);
+        }
       }
     }
 
@@ -66,10 +76,11 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
           <Image
             src={project.image}
             alt={project.title}
-            width={1600}
-            height={2000}
+            width={960}
+            height={1200}
+            quality={IMAGE_QUALITY.detailThumb}
             className="project-detail__thumbnail-image"
-            sizes="47vw"
+            sizes={IMAGE_SIZES.detailThumb}
             priority
           />
         </div>
@@ -81,27 +92,27 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
       </div>
 
       <div className="project-detail__gallery">
-        {detailImages.length > 0 ? (
-          detailImages.map((image, index) => (
-            <div key={image} className="project-detail__gallery-item">
-              <span className="project-detail__gallery-index">
-                {project.detailImageLabels?.[index] ?? index + 1}
-              </span>
-              <div className="project-detail__gallery-image-wrap">
-                <Image
-                  src={image}
-                  alt={`${project.title} 상세 ${index + 1}`}
-                  width={1600}
-                  height={2000}
-                  className="project-detail__gallery-image"
-                  sizes="31vw"
-                />
+        {imagesLoaded
+          ? detailImages.map((image, index) => (
+              <div key={image} className="project-detail__gallery-item">
+                <span className="project-detail__gallery-index">
+                  {project.detailImageLabels?.[index] ?? index + 1}
+                </span>
+                <div className="project-detail__gallery-image-wrap">
+                  <Image
+                    src={image}
+                    alt={`${project.title} 상세 ${index + 1}`}
+                    width={1040}
+                    height={1300}
+                    quality={IMAGE_QUALITY.detailGallery}
+                    className="project-detail__gallery-image"
+                    sizes={IMAGE_SIZES.detailGallery}
+                    loading="lazy"
+                  />
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="project-detail__empty">상세 이미지가 없습니다.</p>
-        )}
+            ))
+          : null}
       </div>
     </section>
   );
