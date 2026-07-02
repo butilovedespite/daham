@@ -6,7 +6,7 @@ export default function SiteLogo() {
   const mieumX = useMieumScroll();
 
   return (
-    <div className="site-logo pointer-events-auto flex w-fit items-start gap-5">
+    <div className="site-logo pointer-events-auto flex w-fit max-w-full items-start gap-5">
       <span
         className="logo-yangpyeong logo-yangpyeong--main leading-none text-black"
         aria-label="다함"

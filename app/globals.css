@@ -83,8 +83,8 @@ textarea {
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
   --font-sans: "Pretendard", sans-serif;
-  --font-pretendard: "Pretendard", sans-serif;
-  --font-yangpyeong: "YangpyeongSaemmul", serif;
+  --font-pretendard: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-yangpyeong: "YangpyeongSaemmul", "HY얕은샘물M", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
 html,
@@ -536,7 +536,7 @@ body {
   :root {
     --project-image-max-width: 100%;
     --project-detail-side-padding: 24px;
-    --project-detail-header-offset: 7.35rem;
+    --project-detail-header-offset: 5.75rem;
   }
 
   .site-header__logo-fixed {
@@ -581,6 +581,12 @@ body {
     width: 100%;
     pointer-events: auto;
     overflow: visible;
+  }
+
+  .site-header__brand-row .site-logo-button {
+    flex: 1;
+    min-width: 0;
+    max-width: calc(100% - var(--header-nav-width) - 0.75rem);
   }
 
   .site-header--mobile .site-logo-button,
@@ -634,26 +640,44 @@ body {
 
   .site-header--mobile .site-logo-button {
     overflow: visible;
-    padding-bottom: 0.15em;
+    padding-bottom: 0.1em;
   }
 
   .site-header--mobile .site-logo {
-    gap: 0.875rem;
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
+    gap: 0.2rem;
+    width: 100%;
+    max-width: 100%;
     overflow: visible;
   }
 
   .site-header--mobile .logo-yangpyeong--main {
-    font-size: 4.33125rem;
+    font-family: var(--font-yangpyeong);
+    font-size: clamp(2.35rem, 11vw, 3.1rem);
+    line-height: 1;
     overflow: visible;
-    padding-bottom: 0.1em;
+    padding-bottom: 0.08em;
+    white-space: nowrap;
   }
 
   .site-header--mobile .logo-subtitle--main {
-    font-size: 1.378125rem;
+    font-family: var(--font-pretendard);
+    font-size: clamp(0.625rem, 2.9vw, 0.8125rem);
+    font-weight: 600;
+    line-height: 1.15;
+    white-space: nowrap;
+    word-break: keep-all;
+    letter-spacing: -0.01em;
+  }
+
+  .site-header--mobile .logo-ham__upper {
+    height: calc(0.52em + 3px);
   }
 
   .site-header--mobile .logo-ham__mieum {
+    clip-path: inset(calc(55% + 3px) 0 0 0);
     transform: none !important;
   }
 
@@ -949,11 +973,13 @@ body {
 .site-logo .logo-subtitle {
   font-family: var(--font-pretendard);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .logo-subtitle {
   font-family: var(--font-pretendard);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .about-panel {
