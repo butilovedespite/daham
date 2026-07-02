@@ -741,6 +741,11 @@ body {
 
   .portfolio-grid {
     row-gap: 40px;
+    scroll-margin-top: 6rem;
+  }
+
+  .works-section__content {
+    scroll-margin-top: 6rem;
   }
 
   .portfolio-row {

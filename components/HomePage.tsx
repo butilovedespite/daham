@@ -44,6 +44,8 @@ export default function HomePage() {
   const [activeNav, setActiveNav] = useState<"WORKS" | "ABOUT">("WORKS");
   const [portfolioColumns, setPortfolioColumns] = useState(3);
   const wasInDetailRef = useRef(false);
+  const portfolioRef = useRef<HTMLDivElement>(null);
+  const pendingCategoryScrollRef = useRef(false);
 
   const selectedProject = useMemo(
     () => (detailProjectId ? findProjectById(detailProjectId) : null),
@@ -141,6 +143,20 @@ export default function HomePage() {
     wasInDetailRef.current = detailProjectId !== null;
   }, [detailProjectId]);
 
+  useLayoutEffect(() => {
+    if (!pendingCategoryScrollRef.current) {
+      return;
+    }
+
+    pendingCategoryScrollRef.current = false;
+
+    if (portfolioColumns !== 1 || detailProjectId || activeNav !== "WORKS") {
+      return;
+    }
+
+    portfolioRef.current?.scrollIntoView({ block: "start" });
+  }, [activeCategory, portfolioColumns, detailProjectId, activeNav]);
+
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 768px)");
     const syncColumns = () => {
@@ -153,6 +169,12 @@ export default function HomePage() {
   }, []);
 
   const handleCategoryChange = (category: Category | "ALL") => {
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+    if (isMobile && category !== activeCategory) {
+      pendingCategoryScrollRef.current = true;
+    }
+
     setActiveCategory(category);
     setActiveNav("WORKS");
 
@@ -239,7 +261,7 @@ export default function HomePage() {
           className="page-container works-section__inner"
           hidden={selectedProject !== null}
         >
-          <div className="works-section__content">
+          <div ref={portfolioRef} className="works-section__content">
             <PortfolioGrid
               projects={filteredProjects}
               columns={portfolioColumns}
