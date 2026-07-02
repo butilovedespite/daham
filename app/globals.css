@@ -7,13 +7,10 @@ html {
 @font-face {
   font-family: "YangpyeongSaemmul";
   src:
-    local("HY얕은샘물L"),
-    local("HY얕은샘물 M"),
     local("HY얕은샘물M"),
-    local("HY얕은샘물B"),
-    url("/fonts/HYSaemmulL.woff2") format("woff2"),
-    url("/fonts/HYSaemmulM.woff2") format("woff2"),
-    url("/fonts/HYSaemmulM.woff") format("woff");
+    local("HY얕은샘물 M"),
+    local("HYShortSamul-Medium"),
+    url("/fonts/HYSaemmulM.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -712,6 +709,15 @@ body {
     flex-shrink: 0;
   }
 
+  .site-header--mobile .logo-yangpyeong__anchor {
+    visibility: visible;
+    pointer-events: none;
+  }
+
+  .site-header--mobile .logo-yangpyeong__face {
+    display: none;
+  }
+
   .site-header--mobile .logo-subtitle,
   .site-header--mobile .logo-subtitle--main {
     font-family: "Pretendard", sans-serif;
@@ -726,15 +732,6 @@ body {
     margin-top: 0;
     padding-top: 0;
     flex-shrink: 0;
-  }
-
-  .site-header--mobile .logo-ham__upper {
-    height: calc(0.52em + 3px);
-  }
-
-  .site-header--mobile .logo-ham__mieum {
-    clip-path: inset(calc(55% + 3px) 0 0 0);
-    transform: none !important;
   }
 
   .works-section {
