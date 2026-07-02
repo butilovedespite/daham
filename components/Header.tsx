@@ -41,11 +41,28 @@ export default function Header({
         <header className="site-header--desktop page-container relative z-50 pb-12 pt-10">
           <div className="flex items-start justify-end">
             <div className="header-nav-group">
-              <CategoryDropdown
-                activeCategory={activeCategory}
-                onCategoryChange={onCategoryChange}
-              />
-              <NavButtons activeNav={activeNav} onNavChange={onNavChange} />
+              <button
+                type="button"
+                onClick={() => onNavChange("ABOUT")}
+                className="nav-btn header-nav-group__about"
+                aria-pressed={activeNav === "ABOUT"}
+              >
+                ABOUT
+              </button>
+              <div className="header-nav-group__category">
+                <CategoryDropdown
+                  activeCategory={activeCategory}
+                  onCategoryChange={onCategoryChange}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => onNavChange("WORKS")}
+                className="nav-btn header-nav-group__works"
+                aria-pressed={activeNav === "WORKS"}
+              >
+                WORKS
+              </button>
             </div>
           </div>
         </header>

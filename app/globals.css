@@ -833,11 +833,29 @@ body {
 }
 
 .header-nav-group {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--header-nav-gap);
+  display: grid;
+  grid-template-columns: var(--header-dropdown-width) var(--header-nav-width);
+  column-gap: var(--header-nav-gap);
+  row-gap: 7px;
   flex-shrink: 0;
   pointer-events: auto;
+}
+
+.header-nav-group__about {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: stretch;
+}
+
+.header-nav-group__category {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.header-nav-group__works {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: stretch;
 }
 
 .category-dropdown {
