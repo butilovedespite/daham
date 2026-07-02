@@ -24,7 +24,7 @@ export default function Header({
 }: HeaderProps) {
   return (
     <>
-      <div className="pointer-events-none fixed inset-x-0 top-10 z-40">
+      <div className="site-header__logo-fixed pointer-events-none fixed inset-x-0 top-10 z-40">
         <div className="page-container">
           <button
             type="button"
@@ -38,7 +38,7 @@ export default function Header({
       </div>
 
       {!detailMode ? (
-        <header className="page-container relative z-50 pb-12 pt-10">
+        <header className="site-header--desktop page-container relative z-50 pb-12 pt-10">
           <div className="flex items-start justify-end">
             <div className="header-nav-group">
               <CategoryDropdown
@@ -50,6 +50,41 @@ export default function Header({
           </div>
         </header>
       ) : null}
+
+      <header
+        className={`site-header site-header--mobile${detailMode ? " site-header--detail" : ""}`}
+      >
+        <div className="page-container site-header__inner">
+          <div className="site-header__brand-row">
+            <button
+              type="button"
+              className="site-logo-button site-header__logo"
+              onClick={onLogoClick}
+              aria-label="첫 화면으로"
+            >
+              <SiteLogo />
+            </button>
+
+            {!detailMode ? (
+              <NavButtons
+                activeNav={activeNav}
+                onNavChange={onNavChange}
+                className="site-header__nav-mobile"
+                aboutFirst
+              />
+            ) : null}
+          </div>
+
+          {!detailMode ? (
+            <div className="site-header__filter-row">
+              <CategoryDropdown
+                activeCategory={activeCategory}
+                onCategoryChange={onCategoryChange}
+              />
+            </div>
+          ) : null}
+        </div>
+      </header>
     </>
   );
 }

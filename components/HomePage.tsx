@@ -20,29 +20,23 @@ function readProjectIdFromUrl() {
   return new URLSearchParams(window.location.search).get("p");
 }
 
-type HomePageProps = {
-  detailProjectIds: string[];
-};
+function findProjectById(projectId: string) {
+  return PROJECTS.find((project) => project.id === projectId) ?? null;
+}
 
-export default function HomePage({ detailProjectIds }: HomePageProps) {
-  const detailProjectIdSet = useMemo(
-    () => new Set(detailProjectIds),
-    [detailProjectIds],
-  );
+export default function HomePage() {
   const [detailProjectId, setDetailProjectId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<Category | "ALL">("ALL");
   const [activeNav, setActiveNav] = useState<"WORKS" | "ABOUT">("WORKS");
+  const [portfolioColumns, setPortfolioColumns] = useState(3);
 
   const selectedProject = useMemo(
-    () =>
-      detailProjectId && detailProjectIdSet.has(detailProjectId)
-        ? (PROJECTS.find((project) => project.id === detailProjectId) ?? null)
-        : null,
-    [detailProjectId, detailProjectIdSet],
+    () => (detailProjectId ? findProjectById(detailProjectId) : null),
+    [detailProjectId],
   );
 
   const openDetail = (projectId: string) => {
-    if (!detailProjectIdSet.has(projectId)) {
+    if (!findProjectById(projectId)) {
       return;
     }
 
@@ -62,7 +56,7 @@ export default function HomePage({ detailProjectIds }: HomePageProps) {
     const syncFromUrl = () => {
       const id = readProjectIdFromUrl();
 
-      if (id && !detailProjectIdSet.has(id)) {
+      if (id && !findProjectById(id)) {
         closeDetail();
         return;
       }
@@ -78,7 +72,7 @@ export default function HomePage({ detailProjectIds }: HomePageProps) {
     const id = readProjectIdFromUrl();
 
     if (id) {
-      if (!detailProjectIdSet.has(id)) {
+      if (!findProjectById(id)) {
         closeDetail();
       } else if (window.history.state?.daham !== "detail") {
         window.history.replaceState({ daham: "home" }, "", "/");
@@ -100,7 +94,18 @@ export default function HomePage({ detailProjectIds }: HomePageProps) {
 
     window.addEventListener("popstate", syncFromUrl);
     return () => window.removeEventListener("popstate", syncFromUrl);
-  }, [detailProjectIdSet]);
+  }, []);
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 768px)");
+    const syncColumns = () => {
+      setPortfolioColumns(mobileQuery.matches ? 1 : 3);
+    };
+
+    syncColumns();
+    mobileQuery.addEventListener("change", syncColumns);
+    return () => mobileQuery.removeEventListener("change", syncColumns);
+  }, []);
 
   const handleCategoryChange = (category: Category | "ALL") => {
     setActiveCategory(category);
@@ -162,12 +167,14 @@ export default function HomePage({ detailProjectIds }: HomePageProps) {
           className="page-container works-section__inner"
           hidden={selectedProject !== null}
         >
-          <PortfolioGrid
-            projects={filteredProjects}
-            sequentialLayout={activeCategory === "ALL"}
-            detailProjectIds={detailProjectIdSet}
-            onProjectClick={handleProjectClick}
-          />
+          <div className="works-section__content">
+            <PortfolioGrid
+              projects={filteredProjects}
+              columns={portfolioColumns}
+              sequentialLayout={activeCategory === "ALL"}
+              onProjectClick={handleProjectClick}
+            />
+          </div>
         </div>
 
         {selectedProject ? (

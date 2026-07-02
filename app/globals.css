@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scrollbar-gutter: stable;
+}
+
 @font-face {
   font-family: "YangpyeongSaemmul";
   src:
@@ -128,6 +132,11 @@ body {
 
 .works-section__inner {
   max-width: 1680px;
+}
+
+.site-header--mobile,
+.site-header__filter-row {
+  display: none;
 }
 
 .project-detail-section {
@@ -336,6 +345,14 @@ body {
   text-align: left;
 }
 
+.logo-yangpyeong--main {
+  font-size: 6.1875rem;
+}
+
+.logo-subtitle--main {
+  font-size: 1.96875rem;
+}
+
 .portfolio-grid {
   display: flex;
   flex-direction: column;
@@ -517,13 +534,131 @@ body {
 
 @media (max-width: 768px) {
   :root {
-    --project-image-max-width: 348px;
+    --project-image-max-width: 100%;
     --project-detail-side-padding: 24px;
-    --project-detail-header-offset: 8.5rem;
+    --project-detail-header-offset: 7.35rem;
+  }
+
+  .site-header__logo-fixed {
+    display: none;
+  }
+
+  .site-header--desktop {
+    display: none !important;
+  }
+
+  .site-header--mobile {
+    display: block;
+    overflow: visible;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--background);
+  }
+
+  .site-header__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    padding-top: 1.25rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .site-header--detail .site-header__inner {
+    padding-bottom: 0.5rem;
+  }
+
+  .site-header__brand-row {
+    position: static;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    pointer-events: auto;
+    overflow: visible;
+  }
+
+  .site-header--mobile .site-logo-button,
+  .site-header--mobile .site-logo,
+  .site-header--mobile .logo-yangpyeong,
+  .site-header--mobile .logo-yangpyeong__face,
+  .site-header--mobile .logo-ham {
+    overflow: visible;
+  }
+
+  .site-header__nav-mobile.nav-btn-stack {
+    gap: 5px;
+    width: var(--header-nav-width);
+    min-width: var(--header-nav-width);
+  }
+
+  .site-header__nav-mobile {
+    display: flex;
+    flex-shrink: 0;
+    margin-top: 0;
+  }
+
+  .site-header__nav-mobile .nav-btn {
+    flex-shrink: 0;
+  }
+
+  html.about-panel-open .site-header--mobile {
+    width: 100%;
+  }
+
+  .site-header__filter-row {
+    display: block;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .site-header__filter-row .category-dropdown {
+    width: 100%;
+  }
+
+  .works-section__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .works-section__content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .site-header--mobile .site-logo-button {
+    overflow: visible;
+    padding-bottom: 0.15em;
+  }
+
+  .site-header--mobile .site-logo {
+    gap: 0.875rem;
+    align-items: flex-start;
+    overflow: visible;
+  }
+
+  .site-header--mobile .logo-yangpyeong--main {
+    font-size: 4.33125rem;
+    overflow: visible;
+    padding-bottom: 0.1em;
+  }
+
+  .site-header--mobile .logo-subtitle--main {
+    font-size: 1.378125rem;
+  }
+
+  .site-header--mobile .logo-ham__mieum {
+    transform: none !important;
   }
 
   .works-section {
-    padding-top: 32px;
+    padding-top: 1rem;
     padding-bottom: 64px;
   }
 
@@ -533,6 +668,82 @@ body {
 
   .portfolio-row {
     grid-template-columns: 1fr !important;
+    row-gap: 40px;
+  }
+
+  .project-card {
+    display: block;
+    width: 100%;
+  }
+
+  .project-card__unit {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .project-card__media {
+    height: auto;
+    align-items: stretch;
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .project-card__media > span {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+    margin-inline: 0;
+  }
+
+  .project-card__image {
+    display: block;
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  .project-card__meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 0.35rem 1rem;
+    margin-top: 10px;
+    padding: 0.45rem 0 0.35rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .project-card__category {
+    position: static;
+    grid-row: 1;
+    grid-column: 1;
+    left: auto;
+  }
+
+  .project-card__year {
+    position: static;
+    grid-row: 1;
+    grid-column: 2;
+    right: auto;
+    justify-self: end;
+  }
+
+  .project-card__title {
+    position: static;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    text-align: left;
+    padding-top: 0.4rem;
+    padding-bottom: 0;
+    border-bottom: none;
+    border-top: 1px solid var(--project-accent, #ff6a00);
   }
 }
 
@@ -649,6 +860,7 @@ body {
 .nav-btn[aria-pressed="true"] {
   background-color: #000000;
   color: #ffffff;
+  border-color: #000000;
 }
 
 .nav-btn[aria-pressed="true"]:hover {
@@ -903,4 +1115,111 @@ body {
 
 .about-panel.about-panel--open[data-cursor-theme="light"] .about-ref__scroll-btn:hover {
   cursor: url("/cursor-default.png?v=1") 4 4, auto !important;
+}
+
+@media (max-width: 768px) {
+  .about-panel.about-panel--fullscreen {
+    position: fixed;
+    inset: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100dvh;
+    margin: 0;
+    transform: translate3d(0, 100%, 0);
+    transition: transform 0.5s ease;
+    will-change: transform;
+  }
+
+  .about-panel.about-panel--fullscreen.about-panel--open {
+    transform: translate3d(0, 0, 0);
+    z-index: 200;
+    pointer-events: auto;
+  }
+
+  .about-panel.about-panel--fullscreen:not(.about-panel--open) {
+    pointer-events: none;
+  }
+
+  .about-ref {
+    box-sizing: border-box;
+    min-height: 100%;
+    height: auto;
+    max-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: calc(max(16px, env(safe-area-inset-top)) + 8px) 24px
+      max(32px, env(safe-area-inset-bottom));
+  }
+
+  .about-ref__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .about-ref__logo {
+    margin-top: 0;
+    padding-right: 40px;
+    gap: 8px;
+  }
+
+  .about-ref__logo-main {
+    font-size: 2.625rem;
+  }
+
+  .about-ref__logo-sub {
+    font-size: 0.8125rem;
+    padding-top: 0.35rem;
+  }
+
+  .about-ref__intro-col {
+    display: contents;
+  }
+
+  .about-ref__scroll-btn {
+    position: fixed;
+    top: calc(max(14px, env(safe-area-inset-top)) + 4px);
+    right: 24px;
+    z-index: 201;
+    margin-top: 0;
+    width: 28px;
+    height: 28px;
+  }
+
+  .about-ref__intro {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.75;
+  }
+
+  .about-ref__label {
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+
+  .about-ref__detail {
+    font-size: 0.6875rem;
+    line-height: 1.65;
+  }
+
+  .about-ref__detail p + p {
+    margin-top: 6px;
+  }
+
+  .about-ref__map {
+    flex: none;
+    width: 100%;
+    min-height: 180px;
+    height: clamp(180px, 48vw, 260px);
+    margin-top: 6px;
+    margin-bottom: 8px;
+  }
 }

@@ -8,7 +8,6 @@ type PortfolioGridProps = {
   columns?: number;
   /** ALL view: assign columns 1→2→3 in chunk order (avoids gridColumn collisions). */
   sequentialLayout?: boolean;
-  detailProjectIds?: ReadonlySet<string>;
   onProjectClick?: (project: Project) => void;
 };
 
@@ -24,7 +23,6 @@ export default function PortfolioGrid({
   projects,
   columns = 3,
   sequentialLayout = false,
-  detailProjectIds,
   onProjectClick,
 }: PortfolioGridProps) {
   if (projects.length === 0) {
@@ -52,7 +50,6 @@ export default function PortfolioGrid({
               <ProjectCard
                 key={project.id}
                 project={project}
-                hasDetail={detailProjectIds?.has(project.id) ?? false}
                 onClick={onProjectClick}
               />
             ))}

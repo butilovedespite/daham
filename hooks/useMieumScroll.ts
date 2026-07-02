@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 const LERP = 0.11;
+const MOBILE_MAX_WIDTH = 768;
 const DETAIL_SCROLL_SELECTOR = ".project-detail__scroll, .project-detail__gallery";
 
 export function useMieumScroll(sensitivity = 0.3, max = 64) {
@@ -12,10 +13,16 @@ export function useMieumScroll(sensitivity = 0.3, max = 64) {
     let target = 0;
     let current = 0;
     let frameId = 0;
+    let enabled = false;
     const lastScrollPositions = new Map<EventTarget, number>();
     const attachedElements = new Set<Element>();
+    let observer: MutationObserver | null = null;
 
     const tick = () => {
+      if (!enabled) {
+        return;
+      }
+
       current += (target - current) * LERP;
 
       if (Math.abs(target - current) < 0.05) {
@@ -86,23 +93,63 @@ export function useMieumScroll(sensitivity = 0.3, max = 64) {
       });
     };
 
-    lastScrollPositions.set(window, window.scrollY);
-    onWindowScroll();
-    syncDetailContainers();
+    const enable = () => {
+      if (enabled) {
+        return;
+      }
 
-    const observer = new MutationObserver(syncDetailContainers);
-    observer.observe(document.body, { childList: true, subtree: true });
+      enabled = true;
+      target = 0;
+      current = 0;
+      setTranslateX(0);
+      lastScrollPositions.clear();
+      lastScrollPositions.set(window, window.scrollY);
+      onWindowScroll();
+      syncDetailContainers();
 
-    frameId = requestAnimationFrame(tick);
-    window.addEventListener("scroll", onWindowScroll, { passive: true });
+      observer = new MutationObserver(syncDetailContainers);
+      observer.observe(document.body, { childList: true, subtree: true });
 
-    return () => {
+      window.addEventListener("scroll", onWindowScroll, { passive: true });
+      frameId = requestAnimationFrame(tick);
+    };
+
+    const disable = () => {
+      if (!enabled) {
+        return;
+      }
+
+      enabled = false;
       window.removeEventListener("scroll", onWindowScroll);
       attachedElements.forEach((element) => {
         detachElement(element);
       });
-      observer.disconnect();
+      attachedElements.clear();
+      lastScrollPositions.clear();
+      observer?.disconnect();
+      observer = null;
       cancelAnimationFrame(frameId);
+      target = 0;
+      current = 0;
+      setTranslateX(0);
+    };
+
+    const mobileQuery = window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`);
+    const syncViewport = () => {
+      if (mobileQuery.matches) {
+        disable();
+        return;
+      }
+
+      enable();
+    };
+
+    syncViewport();
+    mobileQuery.addEventListener("change", syncViewport);
+
+    return () => {
+      mobileQuery.removeEventListener("change", syncViewport);
+      disable();
     };
   }, [max, sensitivity]);
 

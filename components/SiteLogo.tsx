@@ -8,7 +8,7 @@ export default function SiteLogo() {
   return (
     <div className="site-logo pointer-events-auto flex w-fit items-start gap-5">
       <span
-        className="logo-yangpyeong text-[6.1875rem] leading-none text-black"
+        className="logo-yangpyeong logo-yangpyeong--main leading-none text-black"
         aria-label="다함"
       >
         <span className="logo-yangpyeong__anchor" aria-hidden="true">
@@ -33,7 +33,7 @@ export default function SiteLogo() {
           </span>
         </span>
       </span>
-      <span className="logo-subtitle text-[1.96875rem] leading-none text-black">
+      <span className="logo-subtitle logo-subtitle--main leading-none text-black">
         건축사사무소
       </span>
     </div>
