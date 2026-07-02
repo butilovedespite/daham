@@ -20,6 +20,14 @@ function readProjectIdFromUrl() {
   return new URLSearchParams(window.location.search).get("p");
 }
 
+function isAboutOpenInUrl() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return new URLSearchParams(window.location.search).has("about");
+}
+
 function findProjectById(projectId: string) {
   return PROJECTS.find((project) => project.id === projectId) ?? null;
 }
@@ -59,48 +67,70 @@ export default function HomePage() {
     setActiveNav("WORKS");
   };
 
+  const syncFromHistory = () => {
+    const projectId = readProjectIdFromUrl();
+    const aboutOpen = isAboutOpenInUrl();
+
+    if (projectId && !findProjectById(projectId)) {
+      closeDetail();
+      return;
+    }
+
+    if (projectId) {
+      setDetailProjectId(projectId);
+      setActiveNav("WORKS");
+      return;
+    }
+
+    setDetailProjectId(null);
+
+    if (aboutOpen) {
+      setActiveNav("ABOUT");
+      return;
+    }
+
+    setActiveCategory("ALL");
+    setActiveNav("WORKS");
+  };
+
   useEffect(() => {
-    const syncFromUrl = () => {
-      const id = readProjectIdFromUrl();
+    const projectId = readProjectIdFromUrl();
+    const aboutOpen = isAboutOpenInUrl();
 
-      if (id && !findProjectById(id)) {
-        closeDetail();
-        return;
-      }
-
-      setDetailProjectId(id);
-
-      if (!id) {
-        setActiveCategory("ALL");
-        setActiveNav("WORKS");
-      }
-    };
-
-    const id = readProjectIdFromUrl();
-
-    if (id) {
-      if (!findProjectById(id)) {
+    if (projectId) {
+      if (!findProjectById(projectId)) {
         closeDetail();
       } else if (window.history.state?.daham !== "detail") {
         window.history.replaceState({ daham: "home" }, "", "/");
         window.history.pushState(
-          { daham: "detail", projectId: id },
+          { daham: "detail", projectId },
           "",
-          `/?p=${encodeURIComponent(id)}`,
+          `/?p=${encodeURIComponent(projectId)}`,
         );
-        setDetailProjectId(id);
+        setDetailProjectId(projectId);
+        setActiveNav("WORKS");
       } else {
-        setDetailProjectId(id);
+        setDetailProjectId(projectId);
+        setActiveNav("WORKS");
       }
+    } else if (aboutOpen) {
+      if (window.history.state?.daham !== "about") {
+        window.history.replaceState({ daham: "home" }, "", "/");
+        window.history.pushState({ daham: "about" }, "", "/?about");
+      }
+      setDetailProjectId(null);
+      setActiveNav("ABOUT");
     } else {
       if (!window.history.state?.daham) {
         window.history.replaceState({ daham: "home" }, "", "/");
       }
       setDetailProjectId(null);
+      setActiveCategory("ALL");
+      setActiveNav("WORKS");
     }
 
-    window.addEventListener("popstate", syncFromUrl);
-    return () => window.removeEventListener("popstate", syncFromUrl);
+    window.addEventListener("popstate", syncFromHistory);
+    return () => window.removeEventListener("popstate", syncFromHistory);
   }, []);
 
   useLayoutEffect(() => {
@@ -133,12 +163,35 @@ export default function HomePage() {
   };
 
   const handleNavChange = (nav: "WORKS" | "ABOUT") => {
-    setActiveNav(nav);
+    if (nav === "ABOUT") {
+      if (detailProjectId) {
+        window.history.replaceState({ daham: "home" }, "", "/");
+        setDetailProjectId(null);
+      }
 
-    if (detailProjectId) {
-      window.history.replaceState({ daham: "home" }, "", "/");
-      setDetailProjectId(null);
+      if (activeNav !== "ABOUT") {
+        window.history.pushState({ daham: "about" }, "", "/?about");
+      }
+
+      setActiveNav("ABOUT");
+      return;
     }
+
+    if (activeNav === "ABOUT" && window.history.state?.daham === "about") {
+      window.history.back();
+      return;
+    }
+
+    setActiveNav("WORKS");
+  };
+
+  const handleCloseAbout = () => {
+    if (window.history.state?.daham === "about") {
+      window.history.back();
+      return;
+    }
+
+    setActiveNav("WORKS");
   };
 
   const goToHome = () => {
@@ -203,7 +256,7 @@ export default function HomePage() {
 
       <AboutPanel
         isOpen={activeNav === "ABOUT" && selectedProject === null}
-        onClose={() => setActiveNav("WORKS")}
+        onClose={handleCloseAbout}
       />
     </div>
   );
