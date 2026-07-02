@@ -10,7 +10,26 @@ type ProjectDetailViewProps = {
   project: Project;
 };
 
+function useIsDesktopDetailLayout() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 1025px)");
+    const update = () => setIsDesktop(desktopQuery.matches);
+
+    update();
+    desktopQuery.addEventListener("change", update);
+
+    return () => {
+      desktopQuery.removeEventListener("change", update);
+    };
+  }, []);
+
+  return isDesktop;
+}
+
 export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
+  const isDesktopDetailLayout = useIsDesktopDetailLayout();
   const [detailImages, setDetailImages] = useState<string[]>([]);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const { accent } = getMaterialColor(project.category);
@@ -86,10 +105,12 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
         </div>
       </div>
 
-      <div className="project-detail__divider" aria-hidden="true">
-        <span />
-        <span />
-      </div>
+      {isDesktopDetailLayout ? (
+        <div className="project-detail__divider" aria-hidden="true">
+          <span />
+          <span />
+        </div>
+      ) : null}
 
       <div className="project-detail__gallery">
         {imagesLoaded

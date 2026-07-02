@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Header from "@/components/Header";
 import PortfolioGrid from "@/components/PortfolioGrid";
 import ProjectDetailView from "@/components/ProjectDetailView";
@@ -24,11 +24,18 @@ function findProjectById(projectId: string) {
   return PROJECTS.find((project) => project.id === projectId) ?? null;
 }
 
+function resetPageScroll() {
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
+
 export default function HomePage() {
   const [detailProjectId, setDetailProjectId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<Category | "ALL">("ALL");
   const [activeNav, setActiveNav] = useState<"WORKS" | "ABOUT">("WORKS");
   const [portfolioColumns, setPortfolioColumns] = useState(3);
+  const wasInDetailRef = useRef(false);
 
   const selectedProject = useMemo(
     () => (detailProjectId ? findProjectById(detailProjectId) : null),
@@ -96,6 +103,14 @@ export default function HomePage() {
     return () => window.removeEventListener("popstate", syncFromUrl);
   }, []);
 
+  useLayoutEffect(() => {
+    if (wasInDetailRef.current && !detailProjectId) {
+      resetPageScroll();
+    }
+
+    wasInDetailRef.current = detailProjectId !== null;
+  }, [detailProjectId]);
+
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 768px)");
     const syncColumns = () => {
@@ -127,15 +142,19 @@ export default function HomePage() {
   };
 
   const goToHome = () => {
-    if (detailProjectId) {
-      closeDetail();
-      return;
-    }
-
+    window.history.replaceState({ daham: "home" }, "", "/");
+    setDetailProjectId(null);
     setActiveCategory("ALL");
     setActiveNav("WORKS");
-    window.history.replaceState({ daham: "home" }, "", "/");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    resetPageScroll();
+
+    document
+      .querySelectorAll<HTMLElement>(
+        ".project-detail__scroll, .project-detail__gallery",
+      )
+      .forEach((element) => {
+        element.scrollTop = 0;
+      });
   };
 
   const handleProjectClick = (project: Project) => {

@@ -24,7 +24,7 @@ export default function Header({
 }: HeaderProps) {
   return (
     <>
-      <div className="site-header__logo-fixed pointer-events-none fixed inset-x-0 top-10 z-40">
+      <div className="site-header__logo-fixed pointer-events-none fixed inset-x-0 top-10 z-[60]">
         <div className="page-container">
           <button
             type="button"

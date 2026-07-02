@@ -6,9 +6,9 @@ export default function SiteLogo() {
   const mieumX = useMieumScroll();
 
   return (
-    <div className="site-logo pointer-events-auto flex w-fit max-w-full items-start gap-5">
+    <div className="site-logo flex w-fit max-w-full items-start gap-5">
       <span
-        className="logo-yangpyeong logo-yangpyeong--main leading-none text-black"
+        className="logo-yangpyeong logo-yangpyeong--main logo-yangpyeong--header leading-none text-black"
         aria-label="다함"
       >
         <span className="logo-yangpyeong__anchor" aria-hidden="true">
@@ -33,7 +33,7 @@ export default function SiteLogo() {
           </span>
         </span>
       </span>
-      <span className="logo-subtitle logo-subtitle--main leading-none text-black">
+      <span className="logo-subtitle logo-subtitle--main logo-subtitle--header leading-none text-black">
         건축사사무소
       </span>
     </div>
